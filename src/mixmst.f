@@ -114,8 +114,8 @@ c---------------------------------------------------------------------
 c   calculate the variances
       do 1000 h=1,g
 
-        do 200 j=1,p
-          do 200 k=j,p
+        do j=1,p
+          do k=j,p
 
             sum=zero
 
@@ -134,7 +134,8 @@ c   calculate the variances
             
             sigma(j,k,h)=sigma(k,j,h)
 
-200     continue
+          end do
+        end do
 
 1000  continue
 

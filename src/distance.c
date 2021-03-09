@@ -12,15 +12,15 @@ double * sigma, double * tau, double * dist, double *dist2, int * pinfo)
 {
 
 int n = * pn, p = *pp, g = * pg;
-	  
+
 double one =  1.0,minus = -1.0, zero = 0.0;
 
 int incx=1,incy=1;
 char trans[]="N";
 
-// local variables  
- 
-double sigm[p*p],inv[p*p],wy[p],wx[p],wd[p]; 
+// local variables
+
+double sigm[p*p],inv[p*p],wy[p],wx[p],wd[p];
 double coco,temp,sum,tmp,sss;
 int i,j,k,count,save[p];
 
@@ -35,7 +35,7 @@ temp = zero;sum  = zero;
 temp2 = zero;sum2  = zero;
 
 for(k=0;k<g;k++) { //the k th cluster
-	
+
 tmp = zero;sss = zero;
 
 
@@ -44,7 +44,7 @@ tmp2 = zero;sss2 = zero;
 //-----------------------------------------------------------
 //sigm[i][j] = sigma[i][j][k]
 
-	
+
 for(i=0;i<p;i++) // row
 	for(j=0;j<p;j++) // column
 		sigm[j*p+i]=sigma[k*p*p+j*p+i];
@@ -88,7 +88,7 @@ F77_NAME(daxpy)( &p, &minus, wy, &incy, wx, &incx);
 /* y := alpha*A*x + beta*y, or y := alpha*A'*x + beta*y,  */
 //        call dgemv("N", p, p, one, inv, p, wx, 1, zero, wy, 1);
 
-F77_NAME(dgemv)(trans, &p, &p, &one, inv, &p, wx, &incx, &zero, wd, &incy);
+F77_NAME(dgemv)(trans, &p, &p, &one, inv, &p, wx, &incx, &zero, wd, &incy FCONE);
 
 //dtrsv_(uplo,trans,diag,&p, sigm, &p, wy, &incy);
 
@@ -120,15 +120,15 @@ temp  +=tmp;
 sum   +=sss;
 
 
-if(sss >= 1.0) 
-dist[k]=tmp/sss; 
+if(sss >= 1.0)
+dist[k]=tmp/sss;
 else
 dist[k]=zero;
 
 temp2  +=tmp2;
 sum2   +=sss2;
 
-if(sss2 >= 1.0) 
+if(sss2 >= 1.0)
 dist2[k]=tmp2/sss2;
 else
 dist2[k]=zero;
@@ -137,12 +137,12 @@ dist2[k]=zero;
 }  // end k loop
 //---------------------------------------------------------
 
-if(sum >= 1.0) 
+if(sum >= 1.0)
 dist[g]=temp/sum;  // introdistance
 else
 dist[g]=zero;
 
-if(sum2 >= 1.0) 
+if(sum2 >= 1.0)
 dist2[g]=temp2/sum2;  // introdistance
 else
 dist2[g]=zero;
@@ -159,7 +159,7 @@ double * sigma, double * tau, double * dist, double *dist2, int * pinfo)
 
 
 int n = * pn,  p = * pp, g = *pg;
-	  
+
 // some constant variables:
 
 double one =  1.0,minus = -1.0, zero = 0.0;
@@ -167,9 +167,9 @@ double one =  1.0,minus = -1.0, zero = 0.0;
 int  incx=1,incy=1;
 char trans[]="N";
 
-// local variables  
- 
-double sigm[p*p],wy[p],wx[p],wd[p],inv[p*p]; 
+// local variables
+
+double sigm[p*p],wy[p],wx[p],wd[p],inv[p*p];
 double coco,temp,sum, tmp,sss;
 int i,j,k,r,count,save[p];
 
@@ -189,7 +189,7 @@ sum2  = zero;
 
 
 
-for(k=0;k<g;k++) { //the k th cluster 
+for(k=0;k<g;k++) { //the k th cluster
 	dist[k*g+k]=zero;
 	dist2[k*g+k]=zero;
 
@@ -211,7 +211,7 @@ sss2 = zero;
 //sigm[i][j] = sigma[i][j][k] + sigma[i][j][r]
 
 //-----------------------------------------------------------
-	
+
 for(i=0;i<p;i++) // row
 	for(j=0;j<p;j++) // column
 		sigm[j*p+i]=(sigma[k*p*p+j*p+i]+sigma[r*p*p+j*p+i]);
@@ -251,7 +251,7 @@ F77_NAME(daxpy)( &p, &minus, wy, &incy, wx, &incx);
 /* y := alpha*A*x + beta*y, or y := alpha*A'*x + beta*y,  */
 //        call dgemv("N", p, p, one, inv, p, wx, 1, zero, wy, 1);
 
-F77_NAME(dgemv)(trans, &p, &p, &one, inv, &p, wx, &incx, &zero, wd, &incy);
+F77_NAME(dgemv)(trans, &p, &p, &one, inv, &p, wx, &incx, &zero, wd, &incy FCONE);
 
 
 //dtrsv_(uplo,trans,diag,&p, sigm, &p, wy, &incy);
@@ -318,14 +318,14 @@ sum2  += sss2;
 
 
 
-if(sum >= 1.0) 
+if(sum >= 1.0)
 dist[g*g] = temp/sum; // intercluster distance
 else
 dist[g*g]=zero;
 
 
 
-if(sum2 >= 1.0) 
+if(sum2 >= 1.0)
 dist2[g*g] = temp2/sum2; // intercluster distance
 else
 dist2[g*g]=zero;
@@ -335,13 +335,13 @@ return;
 }
 
 
-void mahalonobis_(int *pp, int *pg, double * mu, 
+void mahalonobis_(int *pp, int *pg, double * mu,
 double * sigma, double * dist, int * pinfo)
 {
 
 int p = *pp, g = *pg;
 int count,save[p];
-	  
+
 // some constant variables:
 
 double one =  1.0,minus = -1.0, zero = 0.0;
@@ -349,15 +349,15 @@ double one =  1.0,minus = -1.0, zero = 0.0;
 int  incx=1,incy=1;
 char trans[]="N";
 
-// local variables  
- 
-double sigm[p*p],wy[p],wx[p],inv[p*p]; 
+// local variables
+
+double sigm[p*p],wy[p],wx[p],inv[p*p];
 int i,j,k,r;
 
 pinfo[0]=0;
 
 
-for(k=0;k<g;k++) { //the k th cluster 
+for(k=0;k<g;k++) { //the k th cluster
 
 dist[k*g+k]= zero;
 
@@ -372,7 +372,7 @@ for(r=k+1;r<g;r++) { // the r th clust
 //sigm[i][j] = sigma[i][j][k] + sigma[i][j][r]
 
 //-----------------------------------------------------------
-	
+
 
 for(i=0;i<p;i++) // row
 	for(j=i;j<p;j++) // column
@@ -398,7 +398,7 @@ F77_NAME(daxpy)( &p, &minus, wy, &incx, wx, &incy);
 /* y := alpha*A*x + beta*y, or y := alpha*A'*x + beta*y,  */
 //        call dgemv("N", p, p, one, inv, p, wx, 1, zero, wy, 1);
 
-F77_NAME(dgemv)(trans, &p, &p, &one, inv, &p, wx, &incx, &zero, wy, &incy);
+F77_NAME(dgemv)(trans, &p, &p, &one, inv, &p, wx, &incx, &zero, wy, &incy FCONE);
 
 dist[r*g+k] = F77_NAME(ddot)(&p, wy, &incx, wy,&incy);
 

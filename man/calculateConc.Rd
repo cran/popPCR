@@ -30,10 +30,10 @@ estimates <- calculateConc(5000, 20000, volSamp = 20, volDrp = 0.85)
 estimates
 #    Output:
 #       $lambda
-#          lambda    upper     lower
-#       1.386294  1.410299  1.362289
+#          lambda     lower      upper
+#       1.386294   1.362289   1.410299
 #
 #       $conc
-#           conc     upper     lower
-#       32618.69  33183.51  32053.87
+#           conc      lower      upper
+#       32618.69   32053.87   33183.51
 }

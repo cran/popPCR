@@ -4,11 +4,16 @@ R package for fitting droplet fluorescence populations of dPCR amplitude data us
 
 ## Installation
 
+Install from CRAN
+```r
+install.packages("popPCR")
+```
+
 Install from GitHub
 
 ```r
-library(devtools)
-install_github("Zeroh729/popPCR")
+install.packages("devtools")
+devtools::install_github("Zeroh729/popPCR")
 ```
 
 ## Usage
@@ -85,12 +90,12 @@ newEstimates <- calculateConc(nNegative, nTotal, volSamp = 20, volDrp = 0.85)
 newEstimates
 #    Output:
 #       $lambda
-#          lambda     upper     lower
-#       0.1834247 0.2040731 0.1627763
+#          lambda     lower     upper
+#       0.1834247 0.1627763 0.2040731
 #
 #       $conc
-#           conc    upper    lower
-#       4315.875 4801.719 3830.031
+#           conc    lower    upper 
+#       4315.875 3830.031 4801.719 
 ```
   
 Print results summary

@@ -51,7 +51,7 @@ return(digamma(x[0]));
 //the max and min of the diagonal elements of a p by p matrix v
 void absrng_(double * v, int* p, double * vmin, double * vmax)
 {
-int m = *p,i;  
+int m = *p,i;
 double tmp;
 
 tmp= fabs(v[0]);
@@ -72,7 +72,7 @@ return;
 
 void nonzeromax_(double *v, int *p, double *vmax)
 {
-int m = *p,i;  
+int m = *p,i;
 double tmp;
 double zero=0.0;
 
@@ -108,11 +108,11 @@ void Zeroin_(			/* An estimate of the root */
     int *Maxit,				/* Max # of iterations */
 	double *root)           /* returned root    */
 {
-	
+
 *root= R_zeroin2(*ax, *bx,*fa,*fb,f, info,Tol, Maxit);
-	
+
 return;
-	
+
 }
 
 
@@ -155,7 +155,7 @@ pinfo.sxuu = sumxuuln[h]/(double)n;
 fa = Tequ(ax, &pinfo);
 fb = Tequ(bx, &pinfo);
 
-Zeroin_(&ax,&bx,&fa,&fb,Tequ,&pinfo,&Tol,&Maxit,&root);	
+Zeroin_(&ax,&bx,&fa,&fb,Tequ,&pinfo,&Tol,&Maxit,&root);
 
 dof[h]= root;
 
@@ -188,7 +188,7 @@ double ra;
 if(n == 1) return;
 
 for(i=1;i<n;i++){
-    
+
 	ir = n-i;
 	ra =  a[ir];
 	ii = ib[ir];
@@ -198,7 +198,7 @@ for(i=1;i<n;i++){
 	if(ra > a[j]) {
 		ra =  a[j];
 		ii = ib[j];
-	
+
 		 a[j] =  a[ir];
 		ib[j] = ib[ir];
 
@@ -209,7 +209,7 @@ for(i=1;i<n;i++){
 	}//end j loop
 } //end i loop
 
-return; 
+return;
 
 }
 
@@ -233,7 +233,7 @@ int p = *pp, info=0;
 char uplo[]="U";
 int i,j,k,ii,idx[p];
 
-double wy[p]; 
+double wy[p];
 double zero=0.0;
 
 
@@ -286,15 +286,15 @@ for(k=0;k<p;k++) // row
 
 info=0;
 // Cholesky decomposition for inv
-F77_NAME(dpotrf)(uplo,&p, inv, &p, &info);
+F77_NAME(dpotrf)(uplo,&p, inv, &p, &info FCONE);
 
 if(!info && i < (p-1)){
 j=idx[p-i-2];
 if(sigm[j*p+j] >= eps) break;
-} 
+}
 
 
-} 
+}
 // end of main loop
 //------------------------------------------------
 
@@ -305,7 +305,7 @@ return;
 
 
 // inverse of semi positive definite symmetrirc matrix
-void F77_SUB(inverse3)(double *sigma, double * inv, double *pdet, 
+void F77_SUB(inverse3)(double *sigma, double * inv, double *pdet,
 int *pp, int * pinfo,int *pcount, int *save)
 {
 
@@ -314,8 +314,8 @@ int incx = 1,incy = 1;
 char uplo[]="U",trans[]="T",diag[]="N";
 int i,j,k,ii;
 
-double vmin,vmax,det=0.0; 
-double sigm[p*p],wy[p]; 
+double vmin,vmax,det=0.0;
+double sigm[p*p],wy[p];
 double eps=1e-4,one =1.0,zero=0.0;
 
 //--------------------------------------------------
@@ -328,16 +328,16 @@ double eps=1e-4,one =1.0,zero=0.0;
 
 
 if(p==1) {
-     
+
 	 if(sigma[0] < (eps/(double)100) ) {
-	        
+
 			inv[0]=(double)10/sqrt(eps);
             *pdet = eps/(double)100;
 			save[0]=0;
 			*pcount=1;}
 	 else {
 	        inv[0]=one/sqrt(sigma[0]);
-            *pdet = sigma[0]; 
+            *pdet = sigma[0];
 			save[0]=0;
 	    }
 
@@ -357,7 +357,7 @@ for(i=0;i<p;i++) {// row
 absrng_(sigm,&p,&vmin,&vmax);
 
 
-F77_NAME(dpotrf)(uplo,&p, sigm, &p, &info);
+F77_NAME(dpotrf)(uplo,&p, sigm, &p, &info FCONE);
 
 
 //------------------------------------------------
@@ -377,7 +377,7 @@ SingularityHandler(sigma,sigm,inv, &p, pcount,save,eps);
 
 
 // Cholesky decomposition for sigm
-F77_NAME(dpotrf)(uplo,&p, sigm, &p, &info);
+F77_NAME(dpotrf)(uplo,&p, sigm, &p, &info FCONE);
 
 }//endif
 
@@ -386,9 +386,9 @@ F77_NAME(dpotrf)(uplo,&p, sigm, &p, &info);
 
 //------------------------------------------------
 
-// Calculate the determinant 
+// Calculate the determinant
 det = one;
-for(j=0;j<p;j++)  
+for(j=0;j<p;j++)
     det *= sigm[j*p+j];
 det *= det;
 
@@ -404,10 +404,10 @@ for(k=0;k<p;k++) {// row
     inv[k*p+k]= one;
 }
 
-for(j=0;j< p;j++) 
+for(j=0;j< p;j++)
 {
 F77_NAME(dcopy)( &p, inv+j*p, &incx, wy, &incy);
-F77_NAME(dtrsv)(uplo,trans,diag,&p, sigm, &p, wy, &incy);
+F77_NAME(dtrsv)(uplo,trans,diag,&p, sigm, &p, wy, &incy FCONE FCONE FCONE);
 F77_NAME(dcopy)( &p, wy, &incx, inv+j*p, &incy);
 }
 
@@ -432,8 +432,8 @@ int incx = 1,incy = 1;
 char uplo[]="U",trans[]="T",diag[]="N";
 int i,j,k,ii;
 
-double vmin,vmax; 
-double sigm[p*p],wy[p]; 
+double vmin,vmax;
+double sigm[p*p],wy[p];
 double eps=1e-4,one =1.0,zero=0.0;
 
 //--------------------------------------------------
@@ -444,7 +444,7 @@ double eps=1e-4,one =1.0,zero=0.0;
 *pcount=0;
 
 if(p==1) {
-     
+
 	 if(sigma[0] < (eps/(double)100) ) {
 	        inv[0]=(double)10/sqrt(eps);
 			save[0]=0;*pcount=1;}
@@ -468,7 +468,7 @@ for(i=0;i<p;i++) {// row
 absrng_(sigm,&p,&vmin,&vmax);
 
 
-F77_NAME(dpotrf)(uplo,&p, sigm, &p, &info);
+F77_NAME(dpotrf)(uplo,&p, sigm, &p, &info FCONE);
 
 
 //------------------------------------------------
@@ -495,7 +495,7 @@ for(i=0;i< *pcount; i++) {
 //------------------------------------------------
 
 // Cholesky decomposition for sigm
-F77_NAME(dpotrf)(uplo,&p, sigm, &p, &info);
+F77_NAME(dpotrf)(uplo,&p, sigm, &p, &info FCONE);
 
 }//endif
 
@@ -510,14 +510,14 @@ F77_NAME(dpotrf)(uplo,&p, sigm, &p, &info);
 for(k=0;k<p;k++) {// row
 	for(ii=0;ii<p;ii++) // column
    	    inv[ii*p+k]=zero;
-    
+
 	inv[k*p+k]= one;
 }
 
-for(j=0;j< p;j++) 
+for(j=0;j< p;j++)
 {
 F77_NAME(dcopy)( &p, inv+j*p, &incx, wy, &incy);
-F77_NAME(dtrsv)(uplo,trans,diag,&p, sigm, &p, wy, &incy);
+F77_NAME(dtrsv)(uplo,trans,diag,&p, sigm, &p, wy, &incy FCONE FCONE FCONE);
 F77_NAME(dcopy)( &p, wy, &incx, inv+j*p, &incy);
 }
 
@@ -560,7 +560,7 @@ for(i=0;i<p;i++) {
 	for(j=i;j<p;j++) {
        sigm[j*p+i]=zero;
 
-       for(k=0;k<g;k++) 
+       for(k=0;k<g;k++)
 	   sigm[j*p+i] += sumtau[k]*sigma[k*p*p+j*p+i];
 
        sigma[j*p+i]=sigm[j*p+i]/(double)n;
@@ -570,15 +570,15 @@ for(i=0;i<p;i++) {
 
 
 if(ncov == 2) {
-for(i=0;i<p;i++) 
-	for(j=0;j<p;j++) 
-       if(i != j) sigma[j*p+i]=zero;  
+for(i=0;i<p;i++)
+	for(j=0;j<p;j++)
+       if(i != j) sigma[j*p+i]=zero;
 }
 
 
 if(g>1) {
 for(k=1;k<g;k++)
-  for(i=0;i<p;i++) 
+  for(i=0;i<p;i++)
 	for(j=i;j<p;j++) {
        sigma[k*p*p+j*p+i]=sigma[j*p+i];
        sigma[k*p*p+i*p+j]=sigma[i*p+j];
@@ -591,20 +591,20 @@ if(ncov == 4 || ncov ==5) {
 
 
 for(k=0;k<g;k++)
-   for(i=0;i<p;i++) 
-	for(j=0;j<p;j++) 
-       if(i != j) sigma[k*p*p+j*p+i]=zero;  
+   for(i=0;i<p;i++)
+	for(j=0;j<p;j++)
+       if(i != j) sigma[k*p*p+j*p+i]=zero;
 
-// new staff here	
+// new staff here
 if(ncov == 5) {
    for(k=0;k<g;k++) {
-	    
+
 		tmp=zero;
-        
-		for(i=0;i<p;i++) 
+
+		for(i=0;i<p;i++)
 	       tmp += sigma[k*p*p+i*p+i];
-		
-        for(i=0;i<p;i++) 
+
+        for(i=0;i<p;i++)
 	       sigma[k*p*p+i*p+i]=tmp/(double)p; }}
 
 } //end if
@@ -622,18 +622,18 @@ calculate the posterior probability
 
 */
 
-void F77_SUB(gettau2)(double *tau,const double *pro, double *loglik, 
+void F77_SUB(gettau2)(double *tau,const double *pro, double *loglik,
 const int *pn, const int*pg, int *pinfo)
 {
 int n = * pn, g = * pg;
-	  
+
 // some constant variables:
 
 double one =  1.0, zero = 0.0;
 
 
-// local variables  
- 
+// local variables
+
 double prok,sum,temp;
 double tmax,wx[g];
 int i,k,incy=1;
@@ -655,9 +655,9 @@ F77_NAME(dcopy)( &g, tau+i, &n, wx, &incy);
 
 for(k=0;k<g;k++) {
 		prok=pro[k];
-		if(prok <= zero) 
+		if(prok <= zero)
 			wx[k]=zero;
-		else 
+		else
 			wx[k] += log(prok);
 } //end k loop
 
@@ -667,7 +667,7 @@ nonzeromax_(wx,&g,&tmax);
 
 if(fabs(tmax)<= zero )//{	*pinfo = 6;	   return;}
 {
-	for(k=0;k<g;k++) 
+	for(k=0;k<g;k++)
 		wx[k]=zero;
 
 	sum = one;
@@ -737,13 +737,13 @@ return;
 
 void F77_SUB(tau2clust2)(double * tau, int *pn, int* pg, int * clust)
 {
-int g = *pg, n= *pn,i,j;  
+int g = *pg, n= *pn,i,j;
 double tmp,vmax;
 
 
 // tau[i,j]
 
-for(i=0;i<n;i++) { 
+for(i=0;i<n;i++) {
 
 tmp= (tau[i]);
 vmax = tmp;
@@ -771,18 +771,18 @@ return;
 
 
 
-void F77_SUB(gettau)(double *tau,const double *pro, double *loglik, 
+void F77_SUB(gettau)(double *tau,const double *pro, double *loglik,
 const int *pn, const int*pg, int *pinfo)
 {
 int n = * pn, g = * pg;
-	  
+
 // some constant variables:
 
 double one =  1.0, zero = 0.0;
 
 
-// local variables  
- 
+// local variables
+
 double prok,sum,temp;
 double tmax,wx[g];
 int i,k,incy=1;
@@ -804,10 +804,10 @@ F77_NAME(dcopy)( &g, tau+i, &n, wx, &incy);
 
 for(k=0;k<g;k++) {
 		prok=pro[k];
-		if(prok > zero) 
+		if(prok > zero)
 			wx[k]+= log(prok);
-		else 
-			wx[k]=zero; 
+		else
+			wx[k]=zero;
 } //end k loop
 
 
@@ -839,7 +839,7 @@ for(k=0;k<g;k++) {
 if(sum < one){*pinfo = 7;	   return;}
 
 F77_NAME(dcopy)( &g, wx, &incy, tau+i, &n);
-	
+
 
 sum = one/sum;
 
@@ -864,13 +864,13 @@ return;
 
 void F77_SUB(tau2clust)(double * tau, int *pn, int* pg, int * clust)
 {
-int g = *pg, n= *pn,i,j;  
+int g = *pg, n= *pn,i,j;
 double tmp,vmax;
 
 
 // tau[i,j]
 
-for(i=0;i<n;i++) { 
+for(i=0;i<n;i++) {
 
 tmp= (tau[i]);
 vmax = tmp;

@@ -31,8 +31,8 @@ c   calculate the variances
       do 1000 h=1,g
 
 
-        do 200 j=1,p
-          do 200 k=j,p
+        do j=1,p
+          do k=j,p
             sum=zero;
             do i=1,n
       sum=sum+((y(i,j)-mu(j,h)  )*( y(i,k)-mu(k,h))*ev(i,h)
@@ -45,14 +45,15 @@ c   calculate the variances
 
         ewyy(k,j,h)=sum
 
-200     continue
+          end do
+        end do
 
 1000  continue
 
 
 c   calculate the means
-      do 10 h=1,g
-       do 10 j=1,p
+      do h=1,g
+       do j=1,p
 
          sum=zero
          tmp=zero
@@ -69,7 +70,8 @@ c   calculate the means
          ewy(j,h)=sum
          ewz(j,h)=tmp
 
-10    continue
+       end do
+       end do
 
       return
       end
